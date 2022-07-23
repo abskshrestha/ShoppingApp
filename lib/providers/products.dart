@@ -4,7 +4,7 @@ import '../models/product.dart';
 class Products with ChangeNotifier{
 
   List<Product> _items =[
-    
+
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -41,9 +41,13 @@ class Products with ChangeNotifier{
 
   ];
 
-
+  
   List<Product> get items{
     return [..._items];
+  }
+
+  List<Product> get FavoriteItems{
+    return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
   Product findById (String Id){
