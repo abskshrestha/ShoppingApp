@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/cart.dart';
-import 'package:flutter_complete_guide/widgets/badge.dart';
 import 'package:provider/provider.dart';
-import '../widgets/products_grid.dart';
 
-enum FilteredOptions { Favorites, ShowAll }
+import '../widgets/products_grid.dart';
+import '../widgets/badge.dart';
+import '../providers/cart.dart';
+import 'cart_screen.dart';
+
+enum FilterOptions {
+  Favorites,
+  All,
+}
 
 class ProductsOverviewScreen extends StatefulWidget {
   @override
-  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
+  _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
@@ -19,34 +24,48 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('MyShop'),
-        actions: [
+        actions: <Widget>[
           PopupMenuButton(
-            onSelected: (FilteredOptions SelectedValue) {
+            onSelected: (FilterOptions selectedValue) {
               setState(() {
-                if (SelectedValue == FilteredOptions.Favorites) {
+                if (selectedValue == FilterOptions.Favorites) {
                   _showOnlyFavorites = true;
                 } else {
                   _showOnlyFavorites = false;
                 }
               });
             },
-            icon: Icon(Icons.more_vert),
+            icon: Icon(
+              Icons.more_vert,
+            ),
             itemBuilder: (_) => [
-              PopupMenuItem(
-                  child: Text('Only Favorites'),
-                  value: FilteredOptions.Favorites),
-              PopupMenuItem(
-                  child: Text('Show All'), value: FilteredOptions.ShowAll),
-            ],
+                  PopupMenuItem(
+                    child: Text('Only Favorites'),
+                    value: FilterOptions.Favorites,
+                  ),
+                  PopupMenuItem(
+                    child: Text('Show All'),
+                    value: FilterOptions.All,
+                  ),
+                ],
           ),
-          Consumer<Cart>(builder: (_, cartData, ch) => Badge(
-            child: ch,
-          value: cart.itemCount.toString(),
+          Consumer<Cart>(
+            builder: (_, cart, ch) => Badge(
+                  child: ch,
+                  value: cart.itemCount.toString(),
+                ),
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
           ),
-                      child: IconButton(icon: Icon(Icons.shopping_cart)),
-
-          ),
-          ),
-          ); 
+        ],
+      ),
+      body: ProductsGrid(_showOnlyFavorites),
+    );
   }
 }
