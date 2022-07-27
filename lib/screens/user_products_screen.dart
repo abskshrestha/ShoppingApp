@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
 import 'package:flutter_complete_guide/widgets/user_product_item.dart';
 import '../providers/products.dart';
 import 'package:provider/provider.dart';
 import '../widgets/user_product_item.dart';
 import '../widgets/app_Drawer.dart';
+import '../screens/edit_product_screen.dart';
 
 class UserProductsScreen extends StatelessWidget {
   // const UserProductsScreen({ Key? key }) : super(key: key);
 
-static const routeName = '/user-products';
+  static const routeName = '/user-products';
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,9 @@ static const routeName = '/user-products';
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditProductScreen.routeName);
+            },
           ),
         ],
       ),
