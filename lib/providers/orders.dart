@@ -20,13 +20,18 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+
+  final String authToken;
+
+  Orders(this.authToken, this._orders);
+
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-        'https://flutter-upgrade-3928f-default-rtdb.firebaseio.com/orders.json');
+        'https://flutter-upgrade-3928f-default-rtdb.firebaseio.com/orders.json?auth=$authToken');
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -46,16 +51,13 @@ class Orders with ChangeNotifier {
                   title: item['title']))
               .toList()));
     });
-  _orders = loadedOrders;
-  notifyListeners();
-  
-
+    _orders = loadedOrders.reversed.toList();
+    notifyListeners();
   }
-
 
   Future<void> addOrder(List<CartItem> CartProducts, double total) async {
     final url = Uri.parse(
-        'https://flutter-upgrade-3928f-default-rtdb.firebaseio.com/orders.json');
+        'https://flutter-upgrade-3928f-default-rtdb.firebaseio.com/orders.json?auth=$authToken');
     final timeStamp = DateTime.now();
     final response = await http.post(url,
         body: json.encode({
